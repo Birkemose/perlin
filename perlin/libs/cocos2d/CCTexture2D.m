@@ -281,13 +281,12 @@ static CCTexture2DPixelFormat defaultAlphaPixelFormat_ = kCCTexture2DPixelFormat
 
 			// Use RGBA8888 if default is RGBA8888, otherwise use RGB565.
 			// DO NOT USE RGB888 since it is the same as RGBA8888, but it is more expensive to create it
-			if( defaultAlphaPixelFormat_ == kCCTexture2DPixelFormat_RGBA8888 )
+			if( defaultAlphaPixelFormat_ == kCCTexture2DPixelFormat_RGBA8888 ) {
 				pixelFormat = kCCTexture2DPixelFormat_RGBA8888;
-			else
-				pixelFormat = kCCTexture2DPixelFormat_RGB565;
-			
-			CCLOG(@"cocos2d: CCTexture2D: Using RGB565 texture since image has no alpha");
-				
+			} else {
+				pixelFormat = kCCTexture2DPixelFormat_RGB565;   
+                CCLOG(@"cocos2d: CCTexture2D: Using RGB565 texture since image has no alpha");
+            }
 		}
 	} else {
 		// NOTE: No colorspace means a mask image

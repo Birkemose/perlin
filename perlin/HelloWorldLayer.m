@@ -13,10 +13,18 @@
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
 
+#import "pgeTexture3D.h"
+#import "pgePerlinTexture.h"
+
 #pragma mark - HelloWorldLayer
 
 // HelloWorldLayer implementation
-@implementation HelloWorldLayer
+@implementation HelloWorldLayer {
+    pgePerlinTexture*       m_lava;
+    pgePerlinTexture*       m_clouds;
+    pgePerlinTexture*       m_steam;
+    pgePerlinTexture*       m_ocean;
+}
 
 // Helper class method that creates a Scene with the HelloWorldLayer as the only child.
 +(CCScene *) scene
@@ -41,65 +49,63 @@
 	// Apple recommends to re-assign "self" with the "super's" return value
 	if( (self=[super init]) ) {
 		
-		// create and initialize a Label
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
+        // **********************************************************
+        // animated procedural textures
+        // **********************************************************
+        // create 3d texture
+        
+        pgeTexture3D* texture3D = [ pgeTexture3D texture3D ];
+        
+		// perlin lava
+        m_lava = [ pgePerlinTexture perlinTextureWithWidth:400
+                                                    height:300
+                                                   texture:texture3D 
+                                                    shader:@"pgePerlinLava.fsh" ];
+        m_lava.position = ccp( 75, 412 );
+        m_lava.animationSpeed = 0.01;
+        m_lava.textureScale = 1.0;
+        [ self addChild:m_lava ];
 
-		// ask director for the window size
-		CGSize size = [[CCDirector sharedDirector] winSize];
-	
-		// position the label on the center of the screen
-		label.position =  ccp( size.width /2 , size.height/2 );
-		
-		// add the label as a child to this Layer
-		[self addChild: label];
-		
-		
-		
-		//
-		// Leaderboards and Achievements
-		//
-		
-		// Default font size will be 28 points.
-		[CCMenuItemFont setFontSize:28];
-		
-		// Achievement Menu Item using blocks
-		CCMenuItem *itemAchievement = [CCMenuItemFont itemWithString:@"Achievements" block:^(id sender) {
-			
-			
-			GKAchievementViewController *achivementViewController = [[GKAchievementViewController alloc] init];
-			achivementViewController.achievementDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:achivementViewController animated:YES];
-			
-			[achivementViewController release];
-		}
-									   ];
+		// perlin clouds
+        m_clouds = [ pgePerlinTexture perlinTextureWithWidth:400 
+                                                      height:300 
+                                                     texture:texture3D 
+                                                      shader:@"pgePerlinClouds.fsh" ];
+        m_clouds.position = ccp( 550, 56 );
+        m_clouds.animationSpeed = 0.015;
+        m_clouds.textureScale = 1.50;
+        [ self addChild:m_clouds ];
+        
+		// perlin steam
+        m_steam = [ pgePerlinTexture perlinTextureWithWidth:400 
+                                                     height:300 
+                                                    texture:texture3D 
+                                                     shader:@"pgePerlinSteam.fsh" ];
+        m_steam.position = ccp( 75, 56 );
+        m_steam.animationSpeed = 0.1;
+        m_steam.textureScale = 2.0;
+        [ self addChild:m_steam ];
+        
+		// perlin ocean
+        m_ocean = [ pgePerlinTexture perlinTextureWithWidth:400 
+                                                     height:300 
+                                                    texture:texture3D 
+                                                     shader:@"pgePerlinOcean.fsh" ];
+        m_ocean.position = ccp( 550, 412 );
+        m_ocean.animationSpeed = 0.2;
+        m_ocean.textureScale = 0.60;
+        [ self addChild:m_ocean ];        
+        
+        // animate textures
+        [ self schedule:@selector( animate: ) ];
+        
+        // **********************************************************
 
-		// Leaderboard Menu Item using blocks
-		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString:@"Leaderboard" block:^(id sender) {
-			
-			
-			GKLeaderboardViewController *leaderboardViewController = [[GKLeaderboardViewController alloc] init];
-			leaderboardViewController.leaderboardDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:leaderboardViewController animated:YES];
-			
-			[leaderboardViewController release];
-		}
-									   ];
-		
-		CCMenu *menu = [CCMenu menuWithItems:itemAchievement, itemLeaderboard, nil];
-		
-		[menu alignItemsHorizontallyWithPadding:20];
-		[menu setPosition:ccp( size.width/2, size.height/2 - 50)];
-		
-		// Add the menu to the layer
-		[self addChild:menu];
-
+        //CCSprite* sprite = [ CCSprite spriteWithTexture:texture3D.texture ];
+        //sprite.anchorPoint = CGPointZero;
+        //sprite.scale = 8;
+        //[ self addChild:sprite ];
+                
 	}
 	return self;
 }
@@ -113,6 +119,11 @@
 	
 	// don't forget to call "super dealloc"
 	[super dealloc];
+}
+
+-( void )animate:( ccTime )dt {
+    m_clouds.offset = ccp( m_clouds.offset.x - ( dt * 0.015 ), m_clouds.offset.y );
+    m_steam.offset = ccp( m_steam.offset.x, m_steam.offset.y + ( dt * 0.09 ) );
 }
 
 #pragma mark GameKit delegate
