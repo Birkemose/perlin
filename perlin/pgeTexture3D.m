@@ -134,7 +134,7 @@ r1 = r0 - 1.0;
 -( void )initNoise {
     int i, j, k;
     
-    srand( 22145 );
+    srand( 54321 );
     for ( i = 0; i < m_B; i ++ ) {
         m_p[ i ] = i;
         m_g1[ i ] = ( TEXTURE_FLOAT )( ( rand( ) % ( m_B + m_B ) ) - m_B ) / m_B;

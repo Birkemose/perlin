@@ -34,13 +34,13 @@ void main( ) {
     noiseVector = mix( noiseVector0, noiseVector1, u_animationProgress );
    
     intensity = 
-        abs( noiseVector.r - 0.5 ) +
-        abs( noiseVector.g - 0.25 ) +
+        //abs( noiseVector.r - 0.5 ) +
+        //abs( noiseVector.g - 0.25 ) +
         abs( noiseVector.b - 0.125 ) +
         abs( noiseVector.a - 0.0625 );
     
-    intensity = intensity * 2.5;
-    intensity = intensity + 0.15;
+    intensity = intensity * 8.0;
+    intensity = intensity + 0.20;
     
     intensity = clamp( intensity, 0.0, 1.0 );
     gl_FragColor = texture2D( u_textureColor, vec2( 1.0 - intensity, 0.12 ) );

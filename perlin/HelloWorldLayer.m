@@ -57,13 +57,14 @@
         pgeTexture3D* texture3D = [ pgeTexture3D texture3D ];
         
 		// perlin lava
-        m_lava = [ pgePerlinTexture perlinTextureWithWidth:400
-                                                    height:300
+        m_lava = [ pgePerlinTexture perlinTextureWithWidth:4096
+                                                    height:64
                                                    texture:texture3D 
                                                     shader:@"pgePerlinLava.fsh" ];
-        m_lava.position = ccp( 75, 412 );
+        // m_lava.position = ccp( 75, 412 );
+        m_lava.position = CGPointZero;
         m_lava.animationSpeed = 0.01;
-        m_lava.textureScale = 1.0;
+        m_lava.textureScale = 2.0;
         [ self addChild:m_lava ];
 
 		// perlin clouds
@@ -74,6 +75,7 @@
         m_clouds.position = ccp( 550, 56 );
         m_clouds.animationSpeed = 0.015;
         m_clouds.textureScale = 1.50;
+        m_clouds.visible = NO;
         [ self addChild:m_clouds ];
         
 		// perlin steam
@@ -84,6 +86,7 @@
         m_steam.position = ccp( 75, 56 );
         m_steam.animationSpeed = 0.1;
         m_steam.textureScale = 2.0;
+        m_steam.visible = NO;
         [ self addChild:m_steam ];
         
 		// perlin ocean
@@ -94,6 +97,7 @@
         m_ocean.position = ccp( 550, 412 );
         m_ocean.animationSpeed = 0.2;
         m_ocean.textureScale = 0.60;
+        m_ocean.visible = NO;
         [ self addChild:m_ocean ];        
         
         // animate textures
